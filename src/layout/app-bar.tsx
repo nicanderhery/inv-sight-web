@@ -13,6 +13,7 @@ import {
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { auth } from '../firebase.ts';
+import { updateGlobalSnackbar } from '../state/global-snackbar.ts';
 
 const Appbar = () => {
   const navigate = useNavigate();
@@ -35,15 +36,26 @@ const Appbar = () => {
       signInWithRedirect(auth, provider).catch((error) => {
         console.error(error);
       });
-      getRedirectResult(auth).catch((error) => {
-        console.error(error);
-      });
+      getRedirectResult(auth)
+        .then((result) => {
+          if (!result) {
+            return;
+          }
+          updateGlobalSnackbar('success', `Selamat datang, ${result.user.displayName}`);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       return;
     }
 
-    signInWithPopup(auth, provider).catch((error) => {
-      console.error(error);
-    });
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        updateGlobalSnackbar('success', `Selamat datang, ${result.user.displayName}`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   React.useEffect(() => {
