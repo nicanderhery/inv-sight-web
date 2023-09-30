@@ -1,11 +1,15 @@
 import { mdiLogin, mdiLogout } from '@mdi/js';
 import Icon from '@mdi/react';
 import { AppBar, Button, Toolbar, Typography } from '@mui/material';
-import { GoogleAuthProvider, User, signInWithPopup, signOut } from 'firebase/auth';
+import { Box } from '@mui/system';
+import { GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
 import React from 'react';
+import { useNavigate } from 'react-router';
 import { auth } from '../firebase.ts';
 
 const Appbar = () => {
+  const navigate = useNavigate();
+
   const [user, setUser] = React.useState<User | null>(null);
 
   const onLogin = () => {
@@ -34,9 +38,10 @@ const Appbar = () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" sx={{ cursor: 'pointer' }} onClick={() => navigate('/')}>
           InvSight
         </Typography>
+        <Box sx={{ flexGrow: 1 }} />
         <Button
           startIcon={<Icon path={user ? mdiLogout : mdiLogin} size={1} />}
           color="inherit"
