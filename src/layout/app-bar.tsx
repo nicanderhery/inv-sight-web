@@ -2,7 +2,14 @@ import { mdiLogin, mdiLogout } from '@mdi/js';
 import Icon from '@mdi/react';
 import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
+import {
+  getRedirectResult,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  signOut,
+  User,
+} from 'firebase/auth';
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { auth } from '../firebase.ts';
@@ -21,6 +28,19 @@ const Appbar = () => {
     }
 
     const provider = new GoogleAuthProvider();
+
+    // Check whether it is a mobile device
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      signInWithRedirect(auth, provider).catch((error) => {
+        console.error(error);
+      });
+      getRedirectResult(auth).catch((error) => {
+        console.error(error);
+      });
+      return;
+    }
+
     signInWithPopup(auth, provider).catch((error) => {
       console.error(error);
     });
