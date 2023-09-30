@@ -1,7 +1,7 @@
 import { mdiLogin, mdiLogout } from '@mdi/js';
 import Icon from '@mdi/react';
 import { AppBar, Button, Toolbar, Typography } from '@mui/material';
-import { GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
+import { GoogleAuthProvider, User, signInWithPopup, signOut } from 'firebase/auth';
 import React from 'react';
 import { auth } from '../firebase.ts';
 
@@ -23,12 +23,12 @@ const Appbar = () => {
   };
 
   React.useEffect(() => {
-    const subscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);
     });
 
     // Clear all listeners when no longer needed
-    return () => subscribe();
+    return () => unsubscribe();
   }, []);
 
   return (
