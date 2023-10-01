@@ -31,41 +31,46 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
   const transactionPriceInputRef = React.useRef<HTMLDivElement | null>(null);
 
   const handleTransactionInputSubmit = (debit: boolean) => {
-    // Prevent double submit
-    if (preventDoubleSubmit) {
-      return;
-    }
-    setPreventDoubleSubmit(true);
+    try {
+      // Prevent double submit
+      if (preventDoubleSubmit) {
+        return;
+      }
+      setPreventDoubleSubmit(true);
 
-    if (!transactionNameInput || !price) {
-      setInputRequiredError(true);
-      return;
-    }
+      if (!transactionNameInput || !price) {
+        setInputRequiredError(true);
+        return;
+      }
 
-    // Create transaction
-    const transaction: Transaction = {
-      id: generateId(),
-      createdAt:
-        date?.add(23, 'hour').add(59, 'minute').add(59, 'second').toDate().getTime() ??
-        new Date().getTime(),
-      description: transactionNameInput,
-      price: price,
-      debit: debit,
-      doneBy: user?.displayName ?? 'Unknown',
-    };
+      // Create transaction
+      const transaction: Transaction = {
+        id: generateId(),
+        createdAt:
+          date?.add(23, 'hour').add(59, 'minute').add(59, 'second').toDate().getTime() ??
+          new Date().getTime(),
+        description: transactionNameInput,
+        price: price,
+        debit: debit,
+        doneBy: user?.displayName ?? 'Unknown',
+      };
 
-    // Add transaction to database
-    set(DBRefTransaction(props.storeId, transaction.id), transaction).catch((error) => {
+      // Add transaction to database
+      set(DBRefTransaction(props.storeId, transaction.id), transaction).catch((error) => {
+        console.error(error);
+        updateGlobalSnackbar('error', `Transaksi ${transaction.description} gagal ditambahkan`);
+      });
+
+      // Close modal
+      props.onDismiss(false);
+      updateGlobalSnackbar('success', `Transaksi ${transaction.description} ditambahkan`);
+    } catch (error) {
       console.error(error);
-      updateGlobalSnackbar('error', `Transaksi ${transaction.description} gagal ditambahkan`);
-    });
-
-    // Close modal
-    props.onDismiss(false);
-    updateGlobalSnackbar('success', `Transaksi ${transaction.description} ditambahkan`);
-    setTimeout(() => {
-      setPreventDoubleSubmit(false);
-    }, 100);
+    } finally {
+      setTimeout(() => {
+        setPreventDoubleSubmit(false);
+      }, 100);
+    }
   };
 
   React.useEffect(() => {
