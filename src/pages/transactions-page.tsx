@@ -62,7 +62,13 @@ const TransactionsPage = () => {
 
   return (
     <Box sx={{ padding: '2rem' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
         <Chip
           avatar={
             <Avatar>
@@ -73,12 +79,13 @@ const TransactionsPage = () => {
         />
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'row',
+            display: 'inherit',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
           }}
         >
           <DatePicker
-            sx={{ mx: '1rem' }}
+            sx={{ m: '1rem' }}
             label="Dari"
             value={calendarRange.startDate}
             onChange={(newDate) => {
@@ -89,7 +96,7 @@ const TransactionsPage = () => {
             }}
           />
           <DatePicker
-            sx={{ mx: '1rem' }}
+            sx={{ m: '1rem' }}
             label="Sampai"
             value={calendarRange.endDate}
             onChange={(newDate) => {
@@ -134,32 +141,63 @@ const TransactionsPage = () => {
               <Box
                 sx={{
                   display: 'flex',
-                  width: 'inherit',
+                  flexWrap: 'wrap',
+                  justifyContent: 'flex-start',
                   alignItems: 'center',
+                  width: 'inherit',
                 }}
               >
-                <ListItemText
-                  sx={{ width: '25%', px: '1rem' }}
-                  primary={`${unixToDate(transaction.createdAt).date}\n${
-                    unixToDate(transaction.createdAt).time
-                  }`}
-                />
-                <ListItemText
-                  sx={{ width: '25%', px: '1rem' }}
-                  primary={`${transaction.debit ? 'Dijual' : 'Dibeli'} ${
-                    transaction.data?.quantity ?? 0
-                  }`}
-                />
-                <ListItemText
-                  sx={{ width: '25%', px: '1rem' }}
-                  primary={`${transaction.description} ${transaction.data?.item.name ?? ''} ${
-                    transaction.data?.item.weight ?? ''
-                  } ${transaction.data?.item.model ?? ''}`}
-                />
-                <ListItemText
-                  sx={{ width: '25%', px: '1rem' }}
-                  primary={numberToMoneyIndonesia(transaction.price)}
-                />
+                <Box
+                  sx={{
+                    display: 'inherit',
+                    flexWrap: 'inherit',
+                    alignItems: 'inherit',
+                    flex: 1,
+                  }}
+                >
+                  <Box sx={{ flex: 1 }}>
+                    <ListItemText
+                      sx={{ px: '1rem' }}
+                      primary={`${unixToDate(transaction.createdAt).date}\n${
+                        unixToDate(transaction.createdAt).time
+                      }`}
+                    />
+                  </Box>
+
+                  <Box sx={{ flex: 2 }}>
+                    <ListItemText
+                      sx={{ px: '1rem' }}
+                      primary={numberToMoneyIndonesia(transaction.price)}
+                    />
+                  </Box>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'inherit',
+                    flexWrap: 'inherit',
+                    alignItems: 'inherit',
+                    flex: 1,
+                  }}
+                >
+                  <Box sx={{ flex: 1 }}>
+                    <ListItemText
+                      sx={{ px: '1rem' }}
+                      primary={`${transaction.debit ? 'Dijual' : 'Dibeli'} ${
+                        transaction.data?.quantity ?? 0
+                      }`}
+                    />
+                  </Box>
+                  <Box sx={{ flex: 2 }}>
+                    <ListItemText
+                      sx={{ px: '1rem' }}
+                      primary={
+                        transaction.data
+                          ? `${transaction.data.item.name} ${transaction.data.item.weight} ${transaction.data.item.model}`
+                          : `${transaction.description}`
+                      }
+                    />
+                  </Box>
+                </Box>
               </Box>
             </ListItem>
           );
