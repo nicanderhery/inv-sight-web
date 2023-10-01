@@ -1,6 +1,8 @@
-import { Item } from './item';
+import Item from './item';
 
-export interface TransactionData {
+interface TransactionData {
   item: Item;
   quantity: number;
 }
+
+export default TransactionData;

@@ -1,6 +1,8 @@
 import React from 'react';
 
-export interface StoreAddModalProps {
+interface StoreAddModalProps {
   visible: boolean;
   onDismiss: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export default StoreAddModalProps;

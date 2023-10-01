@@ -10,9 +10,9 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
-import { ItemCardProps } from '../interfaces/components/item-card-props';
+import ItemCardProps from '../interfaces/components/item-card-props';
 
-export const ItemCard: React.FC<ItemCardProps> = (props) => {
+const ItemCard: React.FC<ItemCardProps> = (props) => {
   const openDialog = (sell: boolean) => {
     props.setIsDialogVisible(true);
     props.setStock(props.stock);
@@ -48,3 +48,5 @@ export const ItemCard: React.FC<ItemCardProps> = (props) => {
     </Card>
   );
 };
+
+export default ItemCard;

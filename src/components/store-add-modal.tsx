@@ -9,8 +9,8 @@ import {
 import { get, ref, set, update } from 'firebase/database';
 import React from 'react';
 import { auth, database } from '../firebase';
-import { StoreAddModalProps } from '../interfaces/components/store-add-modal-props';
-import { Store } from '../interfaces/entities/store';
+import StoreAddModalProps from '../interfaces/components/store-add-modal-props';
+import Store from '../interfaces/entities/store';
 import { updateGlobalSnackbar } from '../state/global-snackbar';
 import { DBRefManagerStore, DBRefStore } from '../utils/db-functions';
 import { generateRandomId } from '../utils/generator';

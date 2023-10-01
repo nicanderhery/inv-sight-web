@@ -1,7 +1,9 @@
-import { BaseEntity } from './base-entity';
+import BaseEntity from './base-entity';
 
-export interface Item extends BaseEntity {
+interface Item extends BaseEntity {
   name: string;
   weight: string;
   model: string;
 }
+
+export default Item;

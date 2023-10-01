@@ -12,14 +12,14 @@ import dayjs from 'dayjs';
 import { set } from 'firebase/database';
 import React from 'react';
 import { auth } from '../firebase';
-import { TransactionCustomAddDialogProps } from '../interfaces/components/transaction-custom-add-dialog-props';
-import { Transaction } from '../interfaces/entities/transaction';
+import TransactionCustomAddDialogProps from '../interfaces/components/transaction-custom-add-dialog-props';
+import Transaction from '../interfaces/entities/transaction';
 import { updateGlobalSnackbar } from '../state/global-snackbar';
 import { DBRefTransaction } from '../utils/db-functions';
 import { generateId } from '../utils/generator';
-import { CalendarChooseDate } from './calendar-choose-date';
+import CalendarChooseDate from './calendar-choose-date';
 
-export const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (props) => {
+const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (props) => {
   const user = auth.currentUser;
 
   const [preventDoubleSubmit, setPreventDoubleSubmit] = React.useState(false);
@@ -128,3 +128,5 @@ export const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProp
     </Dialog>
   );
 };
+
+export default TransactionCustomAddDialog;

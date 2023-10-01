@@ -4,9 +4,9 @@ import { Box, Dialog, IconButton } from '@mui/material';
 import { DateCalendar } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import React from 'react';
-import { CalendarChooseDateProps } from '../interfaces/components/calendar-choose-date-props';
+import CalendarChooseDateProps from '../interfaces/components/calendar-choose-date-props';
 
-export const CalendarChooseDate: React.FC<CalendarChooseDateProps> = (props) => {
+const CalendarChooseDate: React.FC<CalendarChooseDateProps> = (props) => {
   const maxDate = new Date(Date.now() - 864e5); // Yesterday
 
   const [open, setOpen] = React.useState(false);
@@ -30,3 +30,5 @@ export const CalendarChooseDate: React.FC<CalendarChooseDateProps> = (props) => 
     </Box>
   );
 };
+
+export default CalendarChooseDate;

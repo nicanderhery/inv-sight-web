@@ -1,4 +1,6 @@
-export interface BaseEntity {
+interface BaseEntity {
   id: string;
   createdAt: number;
 }
+
+export default BaseEntity;

@@ -1,5 +1,5 @@
-import { Item } from '../interfaces/entities/item';
-import { Transaction } from '../interfaces/entities/transaction';
+import Item from '../interfaces/entities/item';
+import Transaction from '../interfaces/entities/transaction';
 import Pair from '../interfaces/types';
 
 export const unixToDate = (unix: number) => {

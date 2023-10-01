@@ -15,7 +15,7 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import StoreAddModal from '../components/store-add-modal';
 import { auth } from '../firebase';
-import { Store } from '../interfaces/entities/store';
+import Store from '../interfaces/entities/store';
 import { DBRefManagerStores, DBRefStore } from '../utils/db-functions';
 
 const HomePage = () => {
