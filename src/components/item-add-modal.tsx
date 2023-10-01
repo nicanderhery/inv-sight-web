@@ -247,7 +247,8 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
             <Icon path={mdiMinus} size={1} />
           </IconButton>
           <Chip
-            sx={{ bgcolor: 'background.default', borderRadius: '0.5rem', marginX: '0.5rem' }}
+            variant="outlined"
+            sx={{ borderRadius: '0.5rem', marginX: '0.5rem' }}
             label={quantity}
           />
           <IconButton onClick={() => setQuantity(quantity + 1)}>

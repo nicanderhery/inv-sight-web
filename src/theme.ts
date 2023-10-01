@@ -5,17 +5,15 @@ const customTheme = (mode: PaletteMode) => ({
     mode: mode,
     ...(mode === 'light'
       ? {
-          primary: {
-            main: '#1976d2',
-          },
           background: {
             default: '#f6f8fc',
-            container: '#ffffff',
+            paper: '#FFFFFF',
           },
         }
       : {
-          primary: {
-            main: '#1976d2',
+          background: {
+            default: '#181c1f',
+            paper: '#374955',
           },
         }),
   },

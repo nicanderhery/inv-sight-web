@@ -76,8 +76,8 @@ const HomePage = () => {
                 <ListItemButton
                   key={store.id}
                   sx={{
-                    bgcolor: 'background.container',
-                    borderRadius: '1rem',
+                    bgcolor: 'background.paper',
+                    borderRadius: '0.5rem',
                     marginBottom: '1rem',
                     boxShadow: 1,
                   }}

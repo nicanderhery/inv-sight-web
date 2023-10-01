@@ -1,6 +1,6 @@
 import { mdiCashMinus, mdiCashPlus, mdiCashRegister, mdiTableLarge } from '@mdi/js';
 import Icon from '@mdi/react';
-import { Avatar, Box, Chip, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import { Box, Chip, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { onValue } from 'firebase/database';
@@ -8,7 +8,6 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import TransactionsExportDialog from '../components/transactions-export-dialog';
 import Transaction from '../interfaces/entities/transaction';
-import { updateGlobalSnackbar } from '../state/global-snackbar';
 import { DBRefTransactions } from '../utils/db-functions';
 import { numberToMoneyIndonesia, unixToDate } from '../utils/formatter';
 
@@ -70,12 +69,10 @@ const TransactionsPage = () => {
         }}
       >
         <Chip
-          avatar={
-            <Avatar>
-              <Icon path={mdiCashRegister} size={1} />
-            </Avatar>
-          }
+          variant="outlined"
+          icon={<Icon path={mdiCashRegister} size={1} />}
           label={`Mutasi: ${numberToMoneyIndonesia(totalTransactions)}`}
+          sx={{ borderRadius: '0.5rem' }}
         />
         <Box
           sx={{
@@ -88,6 +85,8 @@ const TransactionsPage = () => {
             sx={{ m: '1rem' }}
             label="Dari"
             value={calendarRange.startDate}
+            maxDate={calendarRange.endDate}
+            format="DD.MM.YYYY"
             onChange={(newDate) => {
               setCalendarRange({
                 ...calendarRange,
@@ -99,11 +98,9 @@ const TransactionsPage = () => {
             sx={{ m: '1rem' }}
             label="Sampai"
             value={calendarRange.endDate}
+            minDate={calendarRange.startDate}
+            format="DD.MM.YYYY"
             onChange={(newDate) => {
-              if (newDate && calendarRange.startDate && newDate.isBefore(calendarRange.startDate)) {
-                updateGlobalSnackbar('error', 'Tanggal tidak valid');
-                return;
-              }
               setCalendarRange({
                 ...calendarRange,
                 endDate: newDate,
@@ -112,12 +109,10 @@ const TransactionsPage = () => {
           />
         </Box>
         <Chip
-          avatar={
-            <Avatar>
-              <Icon path={mdiTableLarge} size={1} />
-            </Avatar>
-          }
+          variant="outlined"
+          icon={<Icon path={mdiTableLarge} size={1} />}
           label="Download CSV"
+          sx={{ borderRadius: '0.5rem' }}
           onClick={() => setIsExportDialogVisible(true)}
         />
       </Box>
@@ -130,13 +125,11 @@ const TransactionsPage = () => {
               sx={{
                 bgcolor: transaction.debit ? 'rgba(50, 200, 50, 0.3)' : 'rgba(200, 50, 50, 0.3)',
                 my: '0.5rem',
-                borderRadius: '1rem',
+                borderRadius: '0.5rem',
               }}
             >
               <ListItemAvatar>
-                <Avatar>
-                  <Icon path={transaction.debit ? mdiCashPlus : mdiCashMinus} size={1} />
-                </Avatar>
+                <Icon path={transaction.debit ? mdiCashPlus : mdiCashMinus} size={1.5} />
               </ListItemAvatar>
               <Box
                 sx={{

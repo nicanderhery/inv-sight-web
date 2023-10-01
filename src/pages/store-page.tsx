@@ -108,9 +108,11 @@ const StorePage = () => {
         }}
       >
         <Chip
-          avatar={<Icon path={mdiContentCopy} size={1} />}
+          variant="outlined"
+          icon={<Icon path={mdiContentCopy} size={1} />}
           label={`${storeId} - Salin kode toko`}
           sx={{
+            borderRadius: '0.5rem',
             alignSelf: 'center',
             marginBottom: '1rem',
           }}
@@ -122,26 +124,32 @@ const StorePage = () => {
           }}
         />
         <Chip
-          avatar={<Icon path={mdiWallet} size={1} />}
+          variant="outlined"
+          icon={<Icon path={mdiWallet} size={1} />}
           label={`Saldo: ${numberToMoneyIndonesia(balance)}`}
           sx={{
+            borderRadius: '0.5rem',
             alignSelf: 'center',
             marginBottom: '1rem',
           }}
         />
         <Chip
-          avatar={<Icon path={mdiBankTransfer} size={1} />}
+          variant="outlined"
+          icon={<Icon path={mdiBankTransfer} size={1} />}
           label="Tambahkan transaksi khusus"
           sx={{
+            borderRadius: '0.5rem',
             alignSelf: 'center',
             marginBottom: '1rem',
           }}
           onClick={() => setIsCustomTransactionDialogVisible(true)}
         />
         <Chip
-          avatar={<Icon path={mdiFileDocumentMultiple} size={1} />}
+          variant="outlined"
+          icon={<Icon path={mdiFileDocumentMultiple} size={1} />}
           label="Lihat transaksi"
           sx={{
+            borderRadius: '0.5rem',
             alignSelf: 'center',
             marginBottom: '1rem',
           }}

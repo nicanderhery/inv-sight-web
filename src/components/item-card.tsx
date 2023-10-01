@@ -1,14 +1,6 @@
 import { mdiPackage } from '@mdi/js';
 import Icon from '@mdi/react';
-import {
-  Avatar,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Typography,
-} from '@mui/material';
+import { Button, Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
 import React from 'react';
 import ItemCardProps from '../interfaces/components/item-card-props';
 
@@ -20,13 +12,9 @@ const ItemCard: React.FC<ItemCardProps> = (props) => {
   };
 
   return (
-    <Card sx={{ padding: '1rem', margin: '1rem', borderRadius: '1rem' }}>
+    <Card sx={{ padding: '1rem', margin: '1rem', borderRadius: '0.5rem' }}>
       <CardHeader
-        avatar={
-          <Avatar>
-            <Icon path={mdiPackage} size={1} />
-          </Avatar>
-        }
+        icon={<Icon path={mdiPackage} size={1.5} />}
         title={props.stock.first.name}
         subtitle={`${props.stock.first.weight}, ${props.stock.first.model}`}
       />
