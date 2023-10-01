@@ -10,6 +10,7 @@ import { Box, Chip, Fab, List } from '@mui/material';
 import { onValue } from 'firebase/database';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import ItemBuySellDialog from '../components/item-buy-sell-dialog';
 import ItemCard from '../components/item-card';
 import TransactionCustomAddDialog from '../components/transaction-custom-add-dialog';
 import Item from '../interfaces/entities/item';
@@ -206,14 +207,16 @@ const StorePage = () => {
             storeId={storeId}
             items={items}
           />
-          <ItemBuySellDialog
-            visible={isBuySellDialogVisible}
-            onDismiss={setIsBuySellDialogVisible}
-            storeId={storeId}
-            stock={stock}
-            sell={sell}
-          />
+          
         </Portal> */}
+
+        <ItemBuySellDialog
+          visible={isBuySellDialogVisible}
+          onDismiss={setIsBuySellDialogVisible}
+          storeId={storeId}
+          stock={stock}
+          sell={sell}
+        />
       </Box>
     </Box>
   );
