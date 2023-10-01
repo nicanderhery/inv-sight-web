@@ -99,113 +99,109 @@ const StorePage = () => {
     });
 
     // Clear all listeners when no longer needed
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, [storeId, navigate]);
 
   return (
-    <Box>
-      <Box sx={{ padding: '2rem' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Chip
-            avatar={<Icon path={mdiContentCopy} size={1} />}
-            label={`${storeId} - Salin kode toko`}
-            sx={{
-              alignSelf: 'center',
-              marginBottom: '1rem',
-            }}
-            onClick={() => {
-              navigator.clipboard.writeText(storeId).catch(() => {
-                updateGlobalSnackbar('error', 'Gagal menyalin kode toko');
-              });
-              updateGlobalSnackbar('success', 'Kode toko disalin');
-            }}
-          />
-          <Chip
-            avatar={<Icon path={mdiWallet} size={1} />}
-            label={`Saldo: ${numberToMoneyIndonesia(balance)}`}
-            sx={{
-              alignSelf: 'center',
-              marginBottom: '1rem',
-            }}
-          />
-          <Chip
-            avatar={<Icon path={mdiBankTransfer} size={1} />}
-            label="Tambahkan transaksi khusus"
-            sx={{
-              alignSelf: 'center',
-              marginBottom: '1rem',
-            }}
-            onClick={() => setIsCustomTransactionDialogVisible(true)}
-          />
-          <Chip
-            avatar={<Icon path={mdiFileDocumentMultiple} size={1} />}
-            label="Lihat transaksi"
-            sx={{
-              alignSelf: 'center',
-              marginBottom: '1rem',
-            }}
-            onClick={() => navigate(`/store/${storeId}/transactions`)}
-          />
-        </Box>
-        <List
+    <Box sx={{ padding: '2rem' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Chip
+          avatar={<Icon path={mdiContentCopy} size={1} />}
+          label={`${storeId} - Salin kode toko`}
           sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
+            alignSelf: 'center',
+            marginBottom: '1rem',
           }}
-        >
-          {Array.from(inventory.values()).map((stock) => {
-            return (
-              <ItemCard
-                key={stock.first.id}
-                stock={stock}
-                setIsDialogVisible={setIsBuySellDialogVisible}
-                setStock={setStock}
-                setSell={setSell}
-              />
-            );
-          })}
-        </List>
-
-        <Fab
-          style={{
-            position: 'absolute',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            bottom: '4rem',
+          onClick={() => {
+            navigator.clipboard.writeText(storeId).catch(() => {
+              updateGlobalSnackbar('error', 'Gagal menyalin kode toko');
+            });
+            updateGlobalSnackbar('success', 'Kode toko disalin');
           }}
-          variant="extended"
-          color="primary"
-          onClick={() => setIsAddItemModalVisible(true)}
-        >
-          <Icon path={mdiPlus} size={1} />
-          Tambahkan barang
-        </Fab>
-
-        <TransactionCustomAddDialog
-          visible={isCustomTransactionDialogVisible}
-          onDismiss={() => setIsCustomTransactionDialogVisible(false)}
-          storeId={storeId}
         />
-
-        <ItemAddModal
-          visible={isAddItemModalVisible}
-          onDismiss={setIsAddItemModalVisible}
-          storeId={storeId}
-          items={items}
+        <Chip
+          avatar={<Icon path={mdiWallet} size={1} />}
+          label={`Saldo: ${numberToMoneyIndonesia(balance)}`}
+          sx={{
+            alignSelf: 'center',
+            marginBottom: '1rem',
+          }}
         />
-
-        <ItemBuySellDialog
-          visible={isBuySellDialogVisible}
-          onDismiss={setIsBuySellDialogVisible}
-          storeId={storeId}
-          stock={stock}
-          sell={sell}
+        <Chip
+          avatar={<Icon path={mdiBankTransfer} size={1} />}
+          label="Tambahkan transaksi khusus"
+          sx={{
+            alignSelf: 'center',
+            marginBottom: '1rem',
+          }}
+          onClick={() => setIsCustomTransactionDialogVisible(true)}
+        />
+        <Chip
+          avatar={<Icon path={mdiFileDocumentMultiple} size={1} />}
+          label="Lihat transaksi"
+          sx={{
+            alignSelf: 'center',
+            marginBottom: '1rem',
+          }}
+          onClick={() => navigate(`/store/${storeId}/transactions`)}
         />
       </Box>
+      <List
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'flex-start',
+        }}
+      >
+        {Array.from(inventory.values()).map((stock) => {
+          return (
+            <ItemCard
+              key={stock.first.id}
+              stock={stock}
+              setIsDialogVisible={setIsBuySellDialogVisible}
+              setStock={setStock}
+              setSell={setSell}
+            />
+          );
+        })}
+      </List>
+
+      <Fab
+        style={{
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          bottom: '4rem',
+        }}
+        variant="extended"
+        color="primary"
+        onClick={() => setIsAddItemModalVisible(true)}
+      >
+        <Icon path={mdiPlus} size={1} />
+        Tambahkan barang
+      </Fab>
+
+      <TransactionCustomAddDialog
+        visible={isCustomTransactionDialogVisible}
+        onDismiss={() => setIsCustomTransactionDialogVisible(false)}
+        storeId={storeId}
+      />
+
+      <ItemAddModal
+        visible={isAddItemModalVisible}
+        onDismiss={setIsAddItemModalVisible}
+        storeId={storeId}
+        items={items}
+      />
+
+      <ItemBuySellDialog
+        visible={isBuySellDialogVisible}
+        onDismiss={setIsBuySellDialogVisible}
+        storeId={storeId}
+        stock={stock}
+        sell={sell}
+      />
     </Box>
   );
 };
