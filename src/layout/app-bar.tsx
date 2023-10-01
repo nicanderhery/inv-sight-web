@@ -3,12 +3,12 @@ import Icon from '@mdi/react';
 import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import {
-  getRedirectResult,
   GoogleAuthProvider,
+  User,
+  getRedirectResult,
   signInWithPopup,
   signInWithRedirect,
   signOut,
-  User,
 } from 'firebase/auth';
 import React from 'react';
 import { useNavigate } from 'react-router';
@@ -20,11 +20,16 @@ const Appbar = () => {
 
   const [user, setUser] = React.useState<User | null>(null);
 
-  const onLogin = () => {
+  const onAuthButtonClick = () => {
     if (user) {
-      signOut(auth).catch((error) => {
-        console.error(error);
-      });
+      signOut(auth)
+        .then(() => {
+          updateGlobalSnackbar('success', 'Anda berhasil keluar');
+          navigate('/');
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       return;
     }
 
@@ -77,7 +82,7 @@ const Appbar = () => {
         <Button
           startIcon={<Icon path={user ? mdiLogout : mdiLogin} size={1} />}
           color="inherit"
-          onClick={onLogin}
+          onClick={onAuthButtonClick}
         >
           {user ? 'Keluar' : 'Masuk'}
         </Button>
