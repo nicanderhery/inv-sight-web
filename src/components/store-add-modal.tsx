@@ -15,7 +15,7 @@ import { updateGlobalSnackbar } from '../state/global-snackbar';
 import { DBRefManagerStore, DBRefStore } from '../utils/db-functions';
 import { generateRandomId } from '../utils/generator';
 
-export const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
+const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
   const user = auth.currentUser;
 
   const [preventDoubleSubmit, setPreventDoubleSubmit] = React.useState(false);
@@ -104,8 +104,8 @@ export const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
   }, [props.visible]);
 
   return (
-    <Dialog open={props.visible} onClose={() => props.onDismiss(false)}>
-      <DialogTitle>Tambahkan toko baru atau{'\n'}kode toko yang sudah ada</DialogTitle>
+    <Dialog disableRestoreFocus open={props.visible} onClose={() => props.onDismiss(false)}>
+      <DialogTitle>Tambahkan toko baru atau kode toko yang sudah ada</DialogTitle>
       <DialogContent>
         <TextField
           label="Nama toko atau kode toko"
@@ -124,14 +124,12 @@ export const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button
-          variant={'contained'}
-          disabled={preventDoubleSubmit}
-          onClick={handleStoreInputSubmit}
-        >
+        <Button variant="contained" disabled={preventDoubleSubmit} onClick={handleStoreInputSubmit}>
           Tambahkan toko
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
+
+export default StoreAddModal;
