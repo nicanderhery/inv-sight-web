@@ -78,7 +78,7 @@ const Appbar = () => {
         <Typography variant="h6" sx={{ cursor: 'pointer' }} onClick={() => navigate('/')}>
           InvSight
         </Typography>
-        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ flex: 1 }} />
         <Button
           startIcon={<Icon path={user ? mdiLogout : mdiLogin} size={1} />}
           color="inherit"
