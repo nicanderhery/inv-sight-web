@@ -77,7 +77,6 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
 
       // Close modal
       props.onDismiss(false);
-      console.log('modal closed');
     } catch (error) {
       console.error(error);
       updateGlobalSnackbar('error', JSON.stringify(error));

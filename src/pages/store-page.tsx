@@ -7,7 +7,7 @@ import {
 } from '@mdi/js';
 import Icon from '@mdi/react';
 import { Box, Chip, Fab, List } from '@mui/material';
-import { onValue } from 'firebase/database';
+import { get, onValue } from 'firebase/database';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ItemAddModal from '../components/item-add-modal';
@@ -15,7 +15,6 @@ import ItemBuySellDialog from '../components/item-buy-sell-dialog';
 import ItemCard from '../components/item-card';
 import TransactionCustomAddDialog from '../components/transaction-custom-add-dialog';
 import Item from '../interfaces/entities/item';
-import Store from '../interfaces/entities/store';
 import Transaction from '../interfaces/entities/transaction';
 import Pair from '../interfaces/types';
 import { updateGlobalSnackbar } from '../state/global-snackbar';
@@ -26,7 +25,6 @@ const StorePage = () => {
   const storeId = useParams<{ storeId: string }>().storeId!;
   const navigate = useNavigate();
 
-  const [store, setStore] = React.useState<Store>();
   const [transactions, setTransactions] = React.useState<Transaction[]>();
 
   // Custom transaction dialog
@@ -76,19 +74,22 @@ const StorePage = () => {
   }, [inventory]);
 
   React.useEffect(() => {
-    // Fetch store from database
-    const unsubscribeStore = onValue(DBRefStore(storeId), (snapshot) => {
-      const store = snapshot.val() as Store | null;
-      if (!store) {
+    // Check store from database
+    get(DBRefStore(storeId))
+      .then((snapshot) => {
+        if (!snapshot.exists()) {
+          navigate('/');
+          updateGlobalSnackbar('error', 'Toko tidak ditemukan');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
         navigate('/');
-        updateGlobalSnackbar('error', 'Toko tidak ditemukan atau kamu tidak memiliki akses');
-        return;
-      }
-      setStore(store);
-    });
+        updateGlobalSnackbar('error', JSON.stringify(error));
+      });
 
     // Fetch transactions from database
-    const unsubscribeTransactions = onValue(DBRefTransactions(storeId), (snapshot) => {
+    const unsubscribe = onValue(DBRefTransactions(storeId), (snapshot) => {
       const transactions: Transaction[] = [];
       snapshot.forEach((childSnapshot) => {
         const transaction = childSnapshot.val() as Transaction;
@@ -99,22 +100,12 @@ const StorePage = () => {
 
     // Clear all listeners when no longer needed
     return () => {
-      unsubscribeStore();
-      unsubscribeTransactions();
+      unsubscribe();
     };
   }, [storeId, navigate]);
 
   return (
     <Box>
-      {/* <Appbar.Header>
-        <Appbar.BackAction onPress={props.navigation.goBack} />
-        <Appbar.Content title={store?.name} />
-        <Appbar.Action
-          icon="file-document-multiple"
-          onPress={() => props.navigation.navigate('Transactions', { storeId: storeId })}
-        />
-      </Appbar.Header> */}
-
       <Box sx={{ padding: '2rem' }}>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
           <Chip
