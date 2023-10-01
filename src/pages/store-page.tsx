@@ -10,6 +10,7 @@ import { Box, Chip, Fab, List } from '@mui/material';
 import { onValue } from 'firebase/database';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import ItemAddModal from '../components/item-add-modal';
 import ItemBuySellDialog from '../components/item-buy-sell-dialog';
 import ItemCard from '../components/item-card';
 import TransactionCustomAddDialog from '../components/transaction-custom-add-dialog';
@@ -199,16 +200,12 @@ const StorePage = () => {
           storeId={storeId}
         />
 
-        {/* <Portal>
-          // TODO
-          <ItemAddModal
-            visible={isAddItemModalVisible}
-            onDismiss={setIsAddItemModalVisible}
-            storeId={storeId}
-            items={items}
-          />
-          
-        </Portal> */}
+        <ItemAddModal
+          visible={isAddItemModalVisible}
+          onDismiss={setIsAddItemModalVisible}
+          storeId={storeId}
+          items={items}
+        />
 
         <ItemBuySellDialog
           visible={isBuySellDialogVisible}
