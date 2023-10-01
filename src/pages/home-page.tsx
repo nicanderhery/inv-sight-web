@@ -1,18 +1,11 @@
-import { mdiPlus, mdiStore } from '@mdi/js';
+import { mdiStore } from '@mdi/js';
 import Icon from '@mdi/react';
-import {
-  Box,
-  Fab,
-  List,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Typography,
-} from '@mui/material';
+import { Box, List, ListItemAvatar, ListItemButton, ListItemText, Typography } from '@mui/material';
 import { User } from 'firebase/auth';
 import { get, onValue } from 'firebase/database';
 import React from 'react';
 import { useNavigate } from 'react-router';
+import MiddleFab from '../components/middle-fab';
 import StoreAddModal from '../components/store-add-modal';
 import { auth } from '../firebase';
 import Store from '../interfaces/entities/store';
@@ -99,20 +92,7 @@ const HomePage = () => {
             })}
           </List>
 
-          <Fab
-            style={{
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              bottom: '4rem',
-            }}
-            variant="extended"
-            color="primary"
-            onClick={() => setIsAddStoreModalVisible(true)}
-          >
-            <Icon path={mdiPlus} size={1} />
-            Tambahkan toko
-          </Fab>
+          <MiddleFab message="Tambahkan toko" onClick={() => setIsAddStoreModalVisible(true)} />
 
           <StoreAddModal visible={isAddStoreModalVisible} onDismiss={setIsAddStoreModalVisible} />
         </Box>

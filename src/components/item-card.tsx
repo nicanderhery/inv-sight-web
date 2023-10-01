@@ -20,7 +20,7 @@ const ItemCard: React.FC<ItemCardProps> = (props) => {
   };
 
   return (
-    <Card sx={{ width: '30%', padding: '1rem', margin: '1rem', borderRadius: '1rem' }}>
+    <Card sx={{ padding: '1rem', margin: '1rem', borderRadius: '1rem' }}>
       <CardHeader
         avatar={
           <Avatar>

@@ -1,18 +1,13 @@
-import {
-  mdiBankTransfer,
-  mdiContentCopy,
-  mdiFileDocumentMultiple,
-  mdiPlus,
-  mdiWallet,
-} from '@mdi/js';
+import { mdiBankTransfer, mdiContentCopy, mdiFileDocumentMultiple, mdiWallet } from '@mdi/js';
 import Icon from '@mdi/react';
-import { Box, Chip, Fab, List } from '@mui/material';
+import { Box, Chip, List } from '@mui/material';
 import { get, onValue } from 'firebase/database';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ItemAddModal from '../components/item-add-modal';
 import ItemBuySellDialog from '../components/item-buy-sell-dialog';
 import ItemCard from '../components/item-card';
+import MiddleFab from '../components/middle-fab';
 import TransactionCustomAddDialog from '../components/transaction-custom-add-dialog';
 import Item from '../interfaces/entities/item';
 import Transaction from '../interfaces/entities/transaction';
@@ -104,7 +99,14 @@ const StorePage = () => {
 
   return (
     <Box sx={{ padding: '2rem' }}>
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'space-around',
+        }}
+      >
         <Chip
           avatar={<Icon path={mdiContentCopy} size={1} />}
           label={`${storeId} - Salin kode toko`}
@@ -151,7 +153,7 @@ const StorePage = () => {
           display: 'flex',
           flexDirection: 'row',
           flexWrap: 'wrap',
-          justifyContent: 'flex-start',
+          justifyContent: 'center',
         }}
       >
         {Array.from(inventory.values()).map((stock) => {
@@ -167,20 +169,7 @@ const StorePage = () => {
         })}
       </List>
 
-      <Fab
-        style={{
-          position: 'absolute',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          bottom: '4rem',
-        }}
-        variant="extended"
-        color="primary"
-        onClick={() => setIsAddItemModalVisible(true)}
-      >
-        <Icon path={mdiPlus} size={1} />
-        Tambahkan barang
-      </Fab>
+      <MiddleFab message="Tambahkan barang" onClick={() => setIsAddItemModalVisible(true)} />
 
       <TransactionCustomAddDialog
         visible={isCustomTransactionDialogVisible}
