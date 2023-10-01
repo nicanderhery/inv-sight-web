@@ -45,7 +45,9 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
     // Create transaction
     const transaction: Transaction = {
       id: generateId(),
-      createdAt: date?.toDate().getTime() ?? new Date().getTime(),
+      createdAt:
+        date?.add(23, 'hour').add(59, 'minute').add(59, 'second').toDate().getTime() ??
+        new Date().getTime(),
       description: transactionNameInput,
       price: price,
       debit: debit,
