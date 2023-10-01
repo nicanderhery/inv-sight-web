@@ -108,6 +108,7 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
       <DialogTitle>Tambahkan toko baru atau kode toko yang sudah ada</DialogTitle>
       <DialogContent>
         <TextField
+          sx={{ mt: '0.5rem' }}
           label="Nama toko atau kode toko"
           value={storeInput}
           onChange={(event) => setStoreInput(event.target.value)}

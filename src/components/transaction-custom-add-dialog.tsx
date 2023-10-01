@@ -88,6 +88,7 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
       <DialogTitle>Transaksi khusus</DialogTitle>
       <DialogContent>
         <TextField
+          sx={{ my: '0.5rem' }}
           label="Nama transaksi"
           value={transactionNameInput}
           onChange={(event) => setTransactionNameInput(event.target.value)}

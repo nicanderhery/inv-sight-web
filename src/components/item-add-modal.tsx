@@ -139,7 +139,7 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
 
       <DialogContent>
         <Autocomplete
-          sx={{ my: '1rem' }}
+          sx={{ my: '0.5rem' }}
           freeSolo
           disablePortal
           options={Array.from(itemSuggestions[ItemInputType.Name])}
