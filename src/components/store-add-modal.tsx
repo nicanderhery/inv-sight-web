@@ -111,7 +111,6 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
           label="Nama toko atau kode toko"
           value={storeInput}
           onChange={(event) => setStoreInput(event.target.value)}
-          onSubmit={handleStoreInputSubmit}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               handleStoreInputSubmit();
