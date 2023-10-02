@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ItemAddModal from '../components/item-add-modal';
 import ItemBuySellDialog from '../components/item-buy-sell-dialog';
 import ItemCard from '../components/item-card';
+import ItemRenameModal from '../components/item-rename-modal';
 import MiddleFab from '../components/middle-fab';
 import TransactionCustomAddDialog from '../components/transaction-custom-add-dialog';
 import Item from '../interfaces/entities/item';
@@ -20,7 +21,7 @@ const StorePage = () => {
   const storeId = useParams<{ storeId: string }>().storeId!;
   const navigate = useNavigate();
 
-  const [transactions, setTransactions] = React.useState<Transaction[]>();
+  const [transactions, setTransactions] = React.useState<Transaction[]>([]);
 
   // Custom transaction dialog
   const [isCustomTransactionDialogVisible, setIsCustomTransactionDialogVisible] =
@@ -34,10 +35,13 @@ const StorePage = () => {
   const [stock, setStock] = React.useState<Pair<Item, number>>();
   const [sell, setSell] = React.useState(false);
 
+  // Rename item modal
+  const [isRenameItemModalVisible, setIsRenameItemModalVisible] = React.useState(false);
+
   const balance = React.useMemo(() => {
     // Calculate balance from transactions
     return (
-      transactions?.reduce(
+      transactions.reduce(
         (accumulator, transaction) =>
           accumulator + (transaction.debit ? 1 : -1) * transaction.price,
         0,
@@ -47,7 +51,7 @@ const StorePage = () => {
 
   const inventory = React.useMemo(() => {
     const newInventory = new Map<string, Pair<Item, number>>();
-    transactions?.forEach((transaction) => {
+    transactions.forEach((transaction) => {
       const data = transaction.data;
       if (!data) {
         return;
@@ -113,7 +117,6 @@ const StorePage = () => {
           label={`${storeId} - Salin kode toko`}
           sx={{
             borderRadius: '0.5rem',
-            alignSelf: 'center',
             marginBottom: '1rem',
           }}
           onClick={() => {
@@ -129,7 +132,6 @@ const StorePage = () => {
           label={`Saldo: ${numberToMoneyIndonesia(balance)}`}
           sx={{
             borderRadius: '0.5rem',
-            alignSelf: 'center',
             marginBottom: '1rem',
           }}
         />
@@ -139,7 +141,6 @@ const StorePage = () => {
           label="Tambahkan transaksi khusus"
           sx={{
             borderRadius: '0.5rem',
-            alignSelf: 'center',
             marginBottom: '1rem',
           }}
           onClick={() => setIsCustomTransactionDialogVisible(true)}
@@ -150,7 +151,6 @@ const StorePage = () => {
           label="Lihat transaksi"
           sx={{
             borderRadius: '0.5rem',
-            alignSelf: 'center',
             marginBottom: '1rem',
           }}
           onClick={() => navigate(`/store/${storeId}/transactions`)}
@@ -170,6 +170,7 @@ const StorePage = () => {
               key={stock.first.id}
               stock={stock}
               setIsDialogVisible={setIsBuySellDialogVisible}
+              setIsModalVisible={setIsRenameItemModalVisible}
               setStock={setStock}
               setSell={setSell}
             />
@@ -198,6 +199,15 @@ const StorePage = () => {
         storeId={storeId}
         stock={stock}
         sell={sell}
+      />
+
+      <ItemRenameModal
+        visible={isRenameItemModalVisible}
+        onDismiss={setIsRenameItemModalVisible}
+        storeId={storeId}
+        items={items}
+        stock={stock}
+        transactions={transactions}
       />
     </Box>
   );
