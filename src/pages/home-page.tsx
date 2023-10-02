@@ -5,7 +5,7 @@ import { User } from 'firebase/auth';
 import { get, onValue } from 'firebase/database';
 import React from 'react';
 import { useNavigate } from 'react-router';
-import MiddleFab from '../components/middle-fab';
+import AddFab from '../components/add-fab.tsx';
 import StoreAddModal from '../components/store-add-modal';
 import { auth } from '../firebase';
 import Store from '../interfaces/entities/store';
@@ -92,7 +92,7 @@ const HomePage = () => {
             })}
           </List>
 
-          <MiddleFab message="Tambahkan toko" onClick={() => setIsAddStoreModalVisible(true)} />
+          <AddFab onClick={() => setIsAddStoreModalVisible(true)} />
 
           <StoreAddModal visible={isAddStoreModalVisible} onDismiss={setIsAddStoreModalVisible} />
         </Box>

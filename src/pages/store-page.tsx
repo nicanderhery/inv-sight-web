@@ -8,7 +8,7 @@ import ItemAddModal from '../components/item-add-modal';
 import ItemBuySellDialog from '../components/item-buy-sell-dialog';
 import ItemCard from '../components/item-card';
 import ItemRenameModal from '../components/item-rename-modal';
-import MiddleFab from '../components/middle-fab';
+import AddFab from '../components/add-fab.tsx';
 import TransactionCustomAddDialog from '../components/transaction-custom-add-dialog';
 import Item from '../interfaces/entities/item';
 import Transaction from '../interfaces/entities/transaction';
@@ -178,7 +178,7 @@ const StorePage = () => {
         })}
       </List>
 
-      <MiddleFab message="Tambahkan barang" onClick={() => setIsAddItemModalVisible(true)} />
+      <AddFab onClick={() => setIsAddItemModalVisible(true)} />
 
       <TransactionCustomAddDialog
         visible={isCustomTransactionDialogVisible}
