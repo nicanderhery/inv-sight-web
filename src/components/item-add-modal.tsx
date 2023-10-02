@@ -143,6 +143,9 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
           freeSolo
           disablePortal
           options={Array.from(itemSuggestions[ItemInputType.Name])}
+          onInputChange={(_event, value) => {
+            setItemNameInput(value);
+          }}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -169,6 +172,9 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
           freeSolo
           disablePortal
           options={Array.from(itemSuggestions[ItemInputType.Weight])}
+          onInputChange={(_event, value) => {
+            setItemWeightInput(value);
+          }}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -195,6 +201,9 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
           freeSolo
           disablePortal
           options={Array.from(itemSuggestions[ItemInputType.Model])}
+          onInputChange={(_event, value) => {
+            setItemModelInput(value);
+          }}
           renderInput={(params) => (
             <TextField
               {...params}
