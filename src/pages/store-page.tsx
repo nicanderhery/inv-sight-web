@@ -1,14 +1,14 @@
 import { mdiBankTransfer, mdiContentCopy, mdiFileDocumentMultiple, mdiWallet } from '@mdi/js';
 import Icon from '@mdi/react';
-import { Box, Chip, List } from '@mui/material';
+import { Autocomplete, Box, Chip, List, TextField } from '@mui/material';
 import { get, onValue } from 'firebase/database';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import AddFab from '../components/add-fab.tsx';
 import ItemAddModal from '../components/item-add-modal';
 import ItemBuySellDialog from '../components/item-buy-sell-dialog';
 import ItemCard from '../components/item-card';
 import ItemRenameModal from '../components/item-rename-modal';
-import AddFab from '../components/add-fab.tsx';
 import TransactionCustomAddDialog from '../components/transaction-custom-add-dialog';
 import Item from '../interfaces/entities/item';
 import Transaction from '../interfaces/entities/transaction';
@@ -22,6 +22,7 @@ const StorePage = () => {
   const navigate = useNavigate();
 
   const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+  const [search, setSearch] = React.useState('');
 
   // Custom transaction dialog
   const [isCustomTransactionDialogVisible, setIsCustomTransactionDialogVisible] =
@@ -38,6 +39,18 @@ const StorePage = () => {
   // Rename item modal
   const [isRenameItemModalVisible, setIsRenameItemModalVisible] = React.useState(false);
 
+  const isItemMatchingSearchQuery = React.useCallback(
+    (item: Item) => {
+      if (!search) {
+        return true;
+      }
+      const splitSearch = search.split(' ');
+      const itemString = `${item.name} ${item.weight} ${item.model}`.toLocaleLowerCase();
+      return splitSearch.every((search) => itemString.indexOf(search.toLocaleLowerCase()) !== -1);
+    },
+    [search],
+  );
+
   const balance = React.useMemo(() => {
     // Calculate balance from transactions
     return (
@@ -53,7 +66,7 @@ const StorePage = () => {
     const newInventory = new Map<string, Pair<Item, number>>();
     transactions.forEach((transaction) => {
       const data = transaction.data;
-      if (!data) {
+      if (!data || !isItemMatchingSearchQuery(data.item)) {
         return;
       }
 
@@ -66,7 +79,7 @@ const StorePage = () => {
       });
     });
     return newInventory;
-  }, [transactions]);
+  }, [transactions, isItemMatchingSearchQuery]);
 
   const items = React.useMemo(() => {
     return Array.from(inventory.values()).map((pair) => pair.first);
@@ -156,6 +169,19 @@ const StorePage = () => {
           onClick={() => navigate(`/store/${storeId}/transactions`)}
         />
       </Box>
+      <Autocomplete
+        sx={{ my: '0.5rem' }}
+        freeSolo
+        disablePortal
+        options={items.map((item) => `${item.name} ${item.weight} ${item.model}`)}
+        onInputChange={(_event, value) => {
+          setSearch(value);
+        }}
+        value={search}
+        onChange={(_event, value) => setSearch(value ?? '')}
+        fullWidth
+        renderInput={(params) => <TextField {...params} label="Bilah pencarian" />}
+      />
       <List
         sx={{
           display: 'flex',
