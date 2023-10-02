@@ -146,19 +146,19 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
           onInputChange={(_event, value) => {
             setItemNameInput(value);
           }}
+          value={itemNameInput}
+          onChange={(_event, value) => setItemNameInput(value ?? '')}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              itemWeightRef.current?.focus();
+            }
+          }}
+          fullWidth
+          autoFocus
           renderInput={(params) => (
             <TextField
               {...params}
               label="Nama barang"
-              value={itemNameInput}
-              onChange={(event) => setItemNameInput(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  itemWeightRef.current?.focus();
-                }
-              }}
-              fullWidth
-              autoFocus
               error={inputRequiredError && !itemNameInput}
               helperText={
                 inputRequiredError && !itemNameInput ? 'Nama barang tidak boleh kosong' : ''
@@ -175,18 +175,18 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
           onInputChange={(_event, value) => {
             setItemWeightInput(value);
           }}
+          value={itemWeightInput}
+          onChange={(_event, value) => setItemWeightInput(value ?? '')}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              itemModelRef.current?.focus();
+            }
+          }}
+          fullWidth
           renderInput={(params) => (
             <TextField
               {...params}
               label="Berat barang"
-              value={itemWeightInput}
-              onChange={(event) => setItemWeightInput(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  itemModelRef.current?.focus();
-                }
-              }}
-              fullWidth
               inputRef={itemWeightRef}
               error={inputRequiredError && !itemWeightInput}
               helperText={
@@ -204,18 +204,18 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
           onInputChange={(_event, value) => {
             setItemModelInput(value);
           }}
+          value={itemModelInput}
+          onChange={(_event, value) => setItemModelInput(value ?? '')}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              itemPriceRef.current?.focus();
+            }
+          }}
+          fullWidth
           renderInput={(params) => (
             <TextField
               {...params}
               label="Model barang"
-              value={itemModelInput}
-              onChange={(event) => setItemModelInput(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  itemPriceRef.current?.focus();
-                }
-              }}
-              fullWidth
               inputRef={itemModelRef}
               error={inputRequiredError && !itemModelInput}
               helperText={
