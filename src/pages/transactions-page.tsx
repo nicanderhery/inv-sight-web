@@ -119,6 +119,14 @@ const TransactionsPage = () => {
 
       <List sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         {transactions.map((transaction) => {
+          const soldMessage = transaction.debit
+            ? transaction.data
+              ? `Terjual ${transaction.data.quantity}`
+              : 'Pendapatan'
+            : transaction.data
+            ? `Dibeli ${transaction.data.quantity}`
+            : 'Pengeluaran';
+
           return (
             <ListItem
               key={transaction.id}
@@ -173,22 +181,16 @@ const TransactionsPage = () => {
                   }}
                 >
                   <Box sx={{ flex: 1 }}>
-                    <ListItemText
-                      sx={{ px: '1rem' }}
-                      primary={`${transaction.debit ? 'Dijual' : 'Dibeli'} ${
-                        transaction.data?.quantity ?? 0
-                      }`}
-                    />
+                    <ListItemText sx={{ px: '1rem' }} primary={soldMessage} />
                   </Box>
                   <Box sx={{ flex: 2 }}>
                     <ListItemText
                       sx={{ px: '1rem' }}
-                      primary={
-                        transaction.data
-                          ? `${transaction.data.item.name} ${transaction.data.item.weight} ${transaction.data.item.model}`
-                          : `${transaction.description}`
-                      }
+                      primary={`${transaction.data?.item.name ?? ''} ${
+                        transaction.data?.item.weight ?? ''
+                      } ${transaction.data?.item.model ?? ''}`}
                     />
+                    <ListItemText sx={{ px: '1rem' }} primary={transaction.description} />
                   </Box>
                 </Box>
               </Box>
