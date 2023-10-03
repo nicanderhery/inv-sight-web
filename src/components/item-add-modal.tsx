@@ -60,6 +60,16 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
         return;
       }
 
+      // Check whether item already exists
+      if (
+        props.items.some(
+          (item) => item.name === name && item.weight === weight && item.model === model,
+        )
+      ) {
+        updateGlobalSnackbar('error', 'Barang sudah ada');
+        return;
+      }
+
       // Create item
       const item: Item = {
         id: generateId(),
