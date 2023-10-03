@@ -28,6 +28,7 @@ const ItemBuySellDialog: React.FC<ItemBuySellDialogProps> = (props) => {
 
   const [preventDoubleSubmit, setPreventDoubleSubmit] = React.useState(false);
   const [quantity, setQuantity] = React.useState(1);
+  const [description, setDescription] = React.useState<string>('');
   const [price, setPrice] = React.useState<number>(0);
   const [date, setDate] = React.useState<dayjs.Dayjs | null>(null);
 
@@ -53,7 +54,7 @@ const ItemBuySellDialog: React.FC<ItemBuySellDialogProps> = (props) => {
           item: props.stock.first,
           quantity: quantity,
         },
-        description: '',
+        description: description,
         price: price,
         debit: sell,
         doneBy: user?.displayName ?? 'Unknown',
@@ -131,6 +132,13 @@ const ItemBuySellDialog: React.FC<ItemBuySellDialogProps> = (props) => {
             <Icon path={mdiPlus} size={1} />
           </IconButton>
         </Box>
+        <TextField
+          sx={{ mb: '1rem' }}
+          label="Deskripsi (opsional)"
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+          fullWidth
+        />
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Typography variant="body1" sx={{ mr: '0.5rem' }}>
             Rp
