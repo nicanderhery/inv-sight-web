@@ -21,7 +21,7 @@ import Transaction from '../interfaces/entities/transaction';
 import { updateGlobalSnackbar } from '../state/global-snackbar';
 import { DBRefTransaction } from '../utils/db-functions';
 import { generateId } from '../utils/generator';
-import CalendarChooseDate from './calendar-choose-date';
+import Calendar from './calendar.tsx';
 
 const ItemBuySellDialog: React.FC<ItemBuySellDialogProps> = (props) => {
   const user = auth.currentUser;
@@ -32,7 +32,7 @@ const ItemBuySellDialog: React.FC<ItemBuySellDialogProps> = (props) => {
   const [price, setPrice] = React.useState<number>(0);
   const [date, setDate] = React.useState<dayjs.Dayjs | null>(null);
 
-  const handleItemBuySellSubmit = (sell: boolean) => {
+  const handleSubmit = (sell: boolean) => {
     try {
       // Prevent double submit
       if (preventDoubleSubmit) {
@@ -154,15 +154,15 @@ const ItemBuySellDialog: React.FC<ItemBuySellDialogProps> = (props) => {
             inputMode="numeric"
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
-                handleItemBuySellSubmit(props.sell);
+                handleSubmit(props.sell);
               }
             }}
           />
         </Box>
       </DialogContent>
       <DialogActions>
-        <CalendarChooseDate date={date} setDate={setDate} />
-        <Button disabled={preventDoubleSubmit} onClick={() => handleItemBuySellSubmit(props.sell)}>
+        <Calendar date={date} setDate={setDate} />
+        <Button disabled={preventDoubleSubmit} onClick={() => handleSubmit(props.sell)}>
           {props.sell ? 'Jual' : 'Beli'}
         </Button>
       </DialogActions>

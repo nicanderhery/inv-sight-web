@@ -23,31 +23,31 @@ import Transaction from '../interfaces/entities/transaction';
 import { updateGlobalSnackbar } from '../state/global-snackbar';
 import { DBRefTransaction } from '../utils/db-functions';
 import { generateId } from '../utils/generator';
-import CalendarChooseDate from './calendar-choose-date';
+import Calendar from './calendar.tsx';
 
 const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
   const user = auth.currentUser;
 
   const [preventDoubleSubmit, setPreventDoubleSubmit] = React.useState(false);
-  const [itemNameInput, setItemNameInput] = React.useState('');
-  const [itemWeightInput, setItemWeightInput] = React.useState('');
-  const [itemModelInput, setItemModelInput] = React.useState('');
+  const [name, setName] = React.useState('');
+  const [weight, setWeight] = React.useState('');
+  const [model, setModel] = React.useState('');
   const [price, setPrice] = React.useState<number>(0);
   const [quantity, setQuantity] = React.useState(1);
-  const [inputRequiredError, setInputRequiredError] = React.useState(false);
+  const [requiredError, setRequiredError] = React.useState(false);
   const [date, setDate] = React.useState<dayjs.Dayjs | null>(null);
 
-  const itemWeightRef = React.useRef<HTMLDivElement | null>(null);
-  const itemModelRef = React.useRef<HTMLDivElement | null>(null);
-  const itemPriceRef = React.useRef<HTMLDivElement | null>(null);
+  const weightRef = React.useRef<HTMLDivElement | null>(null);
+  const modelRef = React.useRef<HTMLDivElement | null>(null);
+  const priceRef = React.useRef<HTMLDivElement | null>(null);
 
-  const enum ItemInputType {
+  const enum Type {
     Name,
     Weight,
     Model,
   }
 
-  const handleItemInputSubmit = () => {
+  const handleSubmit = () => {
     try {
       // Prevent double submit
       if (preventDoubleSubmit) {
@@ -55,8 +55,8 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
       }
       setPreventDoubleSubmit(true);
 
-      if (!itemNameInput || !itemWeightInput || !itemModelInput) {
-        setInputRequiredError(true);
+      if (!name || !weight || !model) {
+        setRequiredError(true);
         return;
       }
 
@@ -66,9 +66,9 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
         createdAt:
           date?.add(23, 'hour').add(59, 'minute').add(59, 'second').toDate().getTime() ??
           new Date().getTime(),
-        name: itemNameInput,
-        weight: itemWeightInput,
-        model: itemModelInput,
+        name: name,
+        weight: weight,
+        model: model,
       };
 
       // Create transaction
@@ -107,28 +107,28 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
     }
   };
 
-  const itemSuggestions = React.useMemo(() => {
+  const options = React.useMemo(() => {
     // Use array of sets to prevent duplicate suggestions
-    const nameSuggestions = new Set<string>();
-    const weightSuggestions = new Set<string>();
-    const modelSuggestions = new Set<string>();
+    const names = new Set<string>();
+    const weights = new Set<string>();
+    const models = new Set<string>();
     props.items.forEach((item) => {
-      nameSuggestions.add(item.name);
-      weightSuggestions.add(item.weight);
-      modelSuggestions.add(item.model);
+      names.add(item.name);
+      weights.add(item.weight);
+      models.add(item.model);
     });
-    return [nameSuggestions, weightSuggestions, modelSuggestions];
+    return [names, weights, models];
   }, [props.items]);
 
   React.useEffect(() => {
     // Clear all inputs when modal is closed
     setTimeout(() => {
-      setItemNameInput('');
-      setItemWeightInput('');
-      setItemModelInput('');
+      setName('');
+      setWeight('');
+      setModel('');
       setPrice(0);
       setQuantity(1);
-      setInputRequiredError(false);
+      setRequiredError(false);
       setDate(null);
     }, 100);
   }, [props.visible]);
@@ -142,15 +142,15 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
           sx={{ my: '0.5rem' }}
           freeSolo
           disablePortal
-          options={Array.from(itemSuggestions[ItemInputType.Name])}
+          options={Array.from(options[Type.Name])}
           onInputChange={(_event, value) => {
-            setItemNameInput(value);
+            setName(value);
           }}
-          value={itemNameInput}
-          onChange={(_event, value) => setItemNameInput(value ?? '')}
+          value={name}
+          onChange={(_event, value) => setName(value ?? '')}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
-              itemWeightRef.current?.focus();
+              weightRef.current?.focus();
             }
           }}
           fullWidth
@@ -159,10 +159,8 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
             <TextField
               {...params}
               label="Nama barang"
-              error={inputRequiredError && !itemNameInput}
-              helperText={
-                inputRequiredError && !itemNameInput ? 'Nama barang tidak boleh kosong' : ''
-              }
+              error={requiredError && !name}
+              helperText={requiredError && !name ? 'Nama barang tidak boleh kosong' : ''}
             />
           )}
         />
@@ -171,15 +169,15 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
           sx={{ my: '1rem' }}
           freeSolo
           disablePortal
-          options={Array.from(itemSuggestions[ItemInputType.Weight])}
+          options={Array.from(options[Type.Weight])}
           onInputChange={(_event, value) => {
-            setItemWeightInput(value);
+            setWeight(value);
           }}
-          value={itemWeightInput}
-          onChange={(_event, value) => setItemWeightInput(value ?? '')}
+          value={weight}
+          onChange={(_event, value) => setWeight(value ?? '')}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
-              itemModelRef.current?.focus();
+              modelRef.current?.focus();
             }
           }}
           fullWidth
@@ -187,11 +185,9 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
             <TextField
               {...params}
               label="Berat barang"
-              inputRef={itemWeightRef}
-              error={inputRequiredError && !itemWeightInput}
-              helperText={
-                inputRequiredError && !itemWeightInput ? 'Berat barang tidak boleh kosong' : ''
-              }
+              inputRef={weightRef}
+              error={requiredError && !weight}
+              helperText={requiredError && !weight ? 'Berat barang tidak boleh kosong' : ''}
             />
           )}
         />
@@ -200,15 +196,15 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
           sx={{ my: '1rem' }}
           freeSolo
           disablePortal
-          options={Array.from(itemSuggestions[ItemInputType.Model])}
+          options={Array.from(options[Type.Model])}
           onInputChange={(_event, value) => {
-            setItemModelInput(value);
+            setModel(value);
           }}
-          value={itemModelInput}
-          onChange={(_event, value) => setItemModelInput(value ?? '')}
+          value={model}
+          onChange={(_event, value) => setModel(value ?? '')}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
-              itemPriceRef.current?.focus();
+              priceRef.current?.focus();
             }
           }}
           fullWidth
@@ -216,11 +212,9 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
             <TextField
               {...params}
               label="Model barang"
-              inputRef={itemModelRef}
-              error={inputRequiredError && !itemModelInput}
-              helperText={
-                inputRequiredError && !itemModelInput ? 'Model barang tidak boleh kosong' : ''
-              }
+              inputRef={modelRef}
+              error={requiredError && !model}
+              helperText={requiredError && !model ? 'Model barang tidak boleh kosong' : ''}
             />
           )}
         />
@@ -238,12 +232,12 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
             }}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
-                handleItemInputSubmit();
+                handleSubmit();
               }
             }}
             fullWidth
             inputMode="numeric"
-            inputRef={itemPriceRef}
+            inputRef={priceRef}
           />
         </Box>
 
@@ -267,8 +261,8 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
       </DialogContent>
 
       <DialogActions>
-        <CalendarChooseDate date={date} setDate={setDate} />
-        <Button disabled={preventDoubleSubmit} onClick={handleItemInputSubmit}>
+        <Calendar date={date} setDate={setDate} />
+        <Button disabled={preventDoubleSubmit} onClick={handleSubmit}>
           Tambahkan barang
         </Button>
       </DialogActions>

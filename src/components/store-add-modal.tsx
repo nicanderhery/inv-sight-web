@@ -19,8 +19,8 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
   const user = auth.currentUser;
 
   const [preventDoubleSubmit, setPreventDoubleSubmit] = React.useState(false);
-  const [storeInput, setStoreInput] = React.useState('');
-  const [inputRequiredError, setInputRequiredError] = React.useState(false);
+  const [input, setInput] = React.useState('');
+  const [requiredError, setRequiredError] = React.useState(false);
 
   const submitStore = async () => {
     try {
@@ -30,8 +30,8 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
       }
       setPreventDoubleSubmit(true);
 
-      if (!storeInput) {
-        setInputRequiredError(true);
+      if (!input) {
+        setRequiredError(true);
         return;
       }
 
@@ -41,28 +41,28 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
       }
 
       // Check whether it's a store code or store name
-      const isStoreCode = storeInput.toLowerCase().startsWith('id-') && storeInput.length === 9;
+      const isStoreCode = input.toLowerCase().startsWith('id-') && input.length === 9;
       if (isStoreCode) {
         // Check whether user is already a manager of the store
-        const managerSnapshot = await get(DBRefManagerStore(user.uid, storeInput));
+        const managerSnapshot = await get(DBRefManagerStore(user.uid, input));
         if (managerSnapshot.exists()) {
-          throw `Anda sudah menjadi manager toko dengan kode ${storeInput}`;
+          throw `Anda sudah menjadi manager toko dengan kode ${input}`;
         }
 
-        const storeSnapshot = await get(DBRefStore(storeInput));
+        const storeSnapshot = await get(DBRefStore(input));
         if (!storeSnapshot.exists()) {
-          throw `Toko dengan kode ${storeInput} tidak ditemukan`;
+          throw `Toko dengan kode ${input} tidak ditemukan`;
         }
 
         const store = storeSnapshot.val() as Store;
-        await set(DBRefManagerStore(user.uid, storeInput), true);
+        await set(DBRefManagerStore(user.uid, input), true);
         updateGlobalSnackbar('success', `Anda menjadi manager toko ${store.name}`);
       } else {
         // Create new store object
         const store: Store = {
           id: generateRandomId(6),
           createdAt: new Date().getTime(),
-          name: storeInput,
+          name: input,
           owner: user.uid,
         };
 
@@ -87,7 +87,7 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
     }
   };
 
-  const handleStoreInputSubmit = () => {
+  const handleSubmit = () => {
     submitStore().catch((error) => {
       console.error(error);
       updateGlobalSnackbar('error', JSON.stringify(error));
@@ -97,8 +97,8 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
   React.useEffect(() => {
     // Clear all inputs when modal is closed
     setTimeout(() => {
-      setStoreInput('');
-      setInputRequiredError(false);
+      setInput('');
+      setRequiredError(false);
     }, 100);
   }, [props.visible]);
 
@@ -109,21 +109,21 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
         <TextField
           sx={{ mt: '0.5rem' }}
           label="Nama toko atau kode toko"
-          value={storeInput}
-          onChange={(event) => setStoreInput(event.target.value)}
+          value={input}
+          onChange={(event) => setInput(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
-              handleStoreInputSubmit();
+              handleSubmit();
             }
           }}
           fullWidth
           autoFocus
-          error={inputRequiredError && !storeInput}
-          helperText={inputRequiredError && !storeInput ? 'Teks tidak boleh kosong' : ''}
+          error={requiredError && !input}
+          helperText={requiredError && !input ? 'Teks tidak boleh kosong' : ''}
         />
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" disabled={preventDoubleSubmit} onClick={handleStoreInputSubmit}>
+        <Button variant="contained" disabled={preventDoubleSubmit} onClick={handleSubmit}>
           Tambahkan toko
         </Button>
       </DialogActions>

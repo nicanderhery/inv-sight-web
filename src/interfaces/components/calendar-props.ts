@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import React from 'react';
 
-interface CalendarChooseDateProps {
+interface CalendarProps {
   date: dayjs.Dayjs | null;
   setDate: React.Dispatch<React.SetStateAction<dayjs.Dayjs | null>>;
 }
 
-export default CalendarChooseDateProps;
+export default CalendarProps;

@@ -18,23 +18,23 @@ import { generateId } from '../utils/generator';
 
 const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
   const [preventDoubleSubmit, setPreventDoubleSubmit] = React.useState(false);
-  const [itemNameInput, setItemNameInput] = React.useState('');
-  const [itemWeightInput, setItemWeightInput] = React.useState('');
-  const [itemModelInput, setItemModelInput] = React.useState('');
-  const [inputRequiredError, setInputRequiredError] = React.useState(false);
+  const [name, setName] = React.useState('');
+  const [weight, setWeight] = React.useState('');
+  const [model, setModel] = React.useState('');
+  const [requiredError, setRequiredError] = React.useState(false);
   const [duplicateDialogVisible, setDuplicateDialogVisible] = React.useState(false);
   const [duplicateItem, setDuplicateItem] = React.useState<Item>();
 
-  const itemWeightRef = React.useRef<HTMLDivElement | null>(null);
-  const itemModelRef = React.useRef<HTMLDivElement | null>(null);
+  const weightRef = React.useRef<HTMLDivElement | null>(null);
+  const modelRef = React.useRef<HTMLDivElement | null>(null);
 
-  const enum ItemInputType {
+  const enum Type {
     Name,
     Weight,
     Model,
   }
 
-  const handleItemRenameSubmit = (duplicateConfirmed?: boolean) => {
+  const handleSubmit = (duplicateConfirmed?: boolean) => {
     try {
       // Prevent double submit
       if (preventDoubleSubmit) {
@@ -42,8 +42,8 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
       }
       setPreventDoubleSubmit(true);
 
-      if (!itemNameInput || !itemWeightInput || !itemModelInput) {
-        setInputRequiredError(true);
+      if (!name || !weight || !model) {
+        setRequiredError(true);
         return;
       }
 
@@ -54,9 +54,9 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
 
       // Check whether item is changed
       if (
-        props.stock.first.name === itemNameInput &&
-        props.stock.first.weight === itemWeightInput &&
-        props.stock.first.model === itemModelInput
+        props.stock.first.name === name &&
+        props.stock.first.weight === weight &&
+        props.stock.first.model === model
       ) {
         updateGlobalSnackbar('error', 'Tidak ada perubahan');
         return;
@@ -65,10 +65,7 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
       // Check whether user has acknowledged to merge duplicate item
       if (!duplicateConfirmed) {
         const existingItem = props.items.find(
-          (item) =>
-            item.name === itemNameInput &&
-            item.weight === itemWeightInput &&
-            item.model === itemModelInput,
+          (item) => item.name === name && item.weight === weight && item.model === model,
         );
         if (existingItem) {
           setDuplicateDialogVisible(true);
@@ -81,9 +78,9 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
       const item = duplicateItem ?? {
         ...props.stock.first,
         id: generateId(),
-        name: itemNameInput,
-        weight: itemWeightInput,
-        model: itemModelInput,
+        name: name,
+        weight: weight,
+        model: model,
       };
 
       // Update all transactions with the same item
@@ -110,29 +107,29 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
     }
   };
 
-  const itemSuggestions = React.useMemo(() => {
+  const options = React.useMemo(() => {
     // Use array of sets to prevent duplicate suggestions
-    const nameSuggestions = new Set<string>();
-    const weightSuggestions = new Set<string>();
-    const modelSuggestions = new Set<string>();
+    const names = new Set<string>();
+    const weights = new Set<string>();
+    const models = new Set<string>();
     props.items.forEach((item) => {
       if (item.id === props.stock?.first.id) {
         return;
       }
-      nameSuggestions.add(item.name);
-      weightSuggestions.add(item.weight);
-      modelSuggestions.add(item.model);
+      names.add(item.name);
+      weights.add(item.weight);
+      models.add(item.model);
     });
-    return [nameSuggestions, weightSuggestions, modelSuggestions];
+    return [names, weights, models];
   }, [props.items, props.stock]);
 
   React.useEffect(() => {
     // Clear all inputs when modal is closed
     setTimeout(() => {
-      setItemNameInput('');
-      setItemWeightInput('');
-      setItemModelInput('');
-      setInputRequiredError(false);
+      setName('');
+      setWeight('');
+      setModel('');
+      setRequiredError(false);
       setDuplicateDialogVisible(false);
       setDuplicateItem(undefined);
     }, 100);
@@ -149,15 +146,15 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
           sx={{ my: '0.5rem' }}
           freeSolo
           disablePortal
-          options={Array.from(itemSuggestions[ItemInputType.Name])}
+          options={Array.from(options[Type.Name])}
           onInputChange={(_event, value) => {
-            setItemNameInput(value);
+            setName(value);
           }}
-          value={itemNameInput}
-          onChange={(_event, value) => setItemNameInput(value ?? '')}
+          value={name}
+          onChange={(_event, value) => setName(value ?? '')}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
-              itemWeightRef.current?.focus();
+              weightRef.current?.focus();
             }
           }}
           fullWidth
@@ -166,10 +163,8 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
             <TextField
               {...params}
               label="Nama barang"
-              error={inputRequiredError && !itemNameInput}
-              helperText={
-                inputRequiredError && !itemNameInput ? 'Nama barang tidak boleh kosong' : ''
-              }
+              error={requiredError && !name}
+              helperText={requiredError && !name ? 'Nama barang tidak boleh kosong' : ''}
             />
           )}
         />
@@ -178,15 +173,15 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
           sx={{ my: '1rem' }}
           freeSolo
           disablePortal
-          options={Array.from(itemSuggestions[ItemInputType.Weight])}
+          options={Array.from(options[Type.Weight])}
           onInputChange={(_event, value) => {
-            setItemWeightInput(value);
+            setWeight(value);
           }}
-          value={itemWeightInput}
-          onChange={(_event, value) => setItemWeightInput(value ?? '')}
+          value={weight}
+          onChange={(_event, value) => setWeight(value ?? '')}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
-              itemModelRef.current?.focus();
+              modelRef.current?.focus();
             }
           }}
           fullWidth
@@ -194,11 +189,9 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
             <TextField
               {...params}
               label="Berat barang"
-              inputRef={itemWeightRef}
-              error={inputRequiredError && !itemWeightInput}
-              helperText={
-                inputRequiredError && !itemWeightInput ? 'Berat barang tidak boleh kosong' : ''
-              }
+              inputRef={weightRef}
+              error={requiredError && !weight}
+              helperText={requiredError && !weight ? 'Berat barang tidak boleh kosong' : ''}
             />
           )}
         />
@@ -207,15 +200,15 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
           sx={{ my: '1rem' }}
           freeSolo
           disablePortal
-          options={Array.from(itemSuggestions[ItemInputType.Model])}
+          options={Array.from(options[Type.Model])}
           onInputChange={(_event, value) => {
-            setItemModelInput(value);
+            setModel(value);
           }}
-          value={itemModelInput}
-          onChange={(_event, value) => setItemModelInput(value ?? '')}
+          value={model}
+          onChange={(_event, value) => setModel(value ?? '')}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
-              handleItemRenameSubmit();
+              handleSubmit();
             }
           }}
           fullWidth
@@ -223,18 +216,16 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
             <TextField
               {...params}
               label="Model barang"
-              inputRef={itemModelRef}
-              error={inputRequiredError && !itemModelInput}
-              helperText={
-                inputRequiredError && !itemModelInput ? 'Model barang tidak boleh kosong' : ''
-              }
+              inputRef={modelRef}
+              error={requiredError && !model}
+              helperText={requiredError && !model ? 'Model barang tidak boleh kosong' : ''}
             />
           )}
         />
       </DialogContent>
 
       <DialogActions>
-        <Button disabled={preventDoubleSubmit} onClick={() => handleItemRenameSubmit()}>
+        <Button disabled={preventDoubleSubmit} onClick={() => handleSubmit()}>
           Ubah barang
         </Button>
       </DialogActions>
@@ -255,7 +246,7 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
           <Button
             onClick={() => {
               setDuplicateDialogVisible(false);
-              handleItemRenameSubmit(true);
+              handleSubmit(true);
             }}
           >
             Ya

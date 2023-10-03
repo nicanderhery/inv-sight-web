@@ -17,7 +17,7 @@ import Transaction from '../interfaces/entities/transaction';
 import { updateGlobalSnackbar } from '../state/global-snackbar';
 import { DBRefTransaction } from '../utils/db-functions';
 import { generateId } from '../utils/generator';
-import CalendarChooseDate from './calendar-choose-date';
+import Calendar from './calendar.tsx';
 
 const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (props) => {
   const user = auth.currentUser;
@@ -125,7 +125,7 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
         </Box>
       </DialogContent>
       <DialogActions>
-        <CalendarChooseDate date={date} setDate={setDate} />
+        <Calendar date={date} setDate={setDate} />
         <Button disabled={preventDoubleSubmit} onClick={() => handleTransactionInputSubmit(true)}>
           Pendapatan
         </Button>
