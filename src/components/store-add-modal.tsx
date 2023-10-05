@@ -6,9 +6,9 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-import { get, ref, set, update } from 'firebase/database';
+import { get, set } from 'firebase/database';
 import React from 'react';
-import { auth, database } from '../firebase';
+import { auth } from '../firebase';
 import StoreAddModalProps from '../interfaces/components/store-add-modal-props';
 import Store from '../interfaces/entities/store';
 import { updateGlobalSnackbar } from '../state/global-snackbar';
@@ -41,6 +41,7 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
       }
 
       // Check whether it's a store code or store name
+      let message = 'Mengecek kode toko...';
       const isStoreCode = input.toLowerCase().startsWith('id-') && input.length === 9;
       if (isStoreCode) {
         // Check whether user is already a manager of the store
@@ -56,7 +57,7 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
 
         const store = storeSnapshot.val() as Store;
         await set(DBRefManagerStore(user.uid, input), true);
-        updateGlobalSnackbar('success', `Anda menjadi manager toko ${store.name}`);
+        message = `Toko ${store.name} ditambahkan`;
       } else {
         // Create new store object
         const store: Store = {
@@ -66,17 +67,14 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
           owner: user.uid,
         };
 
-        const updates = {
-          [DBRefStore(store.id).toString()]: store,
-          [DBRefManagerStore(user.uid, store.id).toString()]: true,
-        };
-        await update(ref(database), updates);
-
-        updateGlobalSnackbar('success', `Toko ${store.name} berhasil ditambahkan`);
+        await set(DBRefStore(store.id), store);
+        await set(DBRefManagerStore(user.uid, store.id), true);
+        message = `Toko ${store.name} ditambahkan`;
       }
 
       // Close modal
       props.onDismiss(false);
+      updateGlobalSnackbar('success', message);
     } catch (error) {
       console.error(error);
       updateGlobalSnackbar('error', JSON.stringify(error));
