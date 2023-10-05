@@ -30,17 +30,16 @@ const TransactionsPage = () => {
   }, [transactions]);
 
   React.useEffect(() => {
-    const startDate = calendarRange.startDate?.toDate().getTime() ?? 0;
-    const endDate =
-      calendarRange.endDate
-        ?.add(23, 'hour')
-        .add(59, 'minute')
-        .add(59, 'second')
-        .toDate()
-        .getTime() ?? new Date().getTime();
-
     // Fetch transactions from database
     const unsubscribe = onValue(DBRefTransactions(storeId), (snapshot) => {
+      const startDate = calendarRange.startDate?.toDate().getTime() ?? 0;
+      const endDate =
+        calendarRange.endDate
+          ?.add(23, 'hour')
+          .add(59, 'minute')
+          .add(59, 'second')
+          .toDate()
+          .getTime() ?? new Date().setHours(23, 59, 59, 999);
       const transactions: Transaction[] = [];
       snapshot.forEach((childSnapshot) => {
         const transaction = childSnapshot.val() as Transaction;
