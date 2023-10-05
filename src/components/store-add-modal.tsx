@@ -57,7 +57,7 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
 
         const store = storeSnapshot.val() as Store;
         await set(DBRefManagerStore(user.uid, input), true);
-        message = `Toko ${store.name} ditambahkan`;
+        message = `Anda menjadi manager toko ${store.name}`;
       } else {
         // Create new store object
         const store: Store = {
