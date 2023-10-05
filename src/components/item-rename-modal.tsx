@@ -158,10 +158,10 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
             }
           }}
           fullWidth
-          autoFocus
           renderInput={(params) => (
             <TextField
               {...params}
+              autoFocus
               label="Nama barang"
               error={requiredError && !name}
               helperText={requiredError && !name ? 'Nama barang tidak boleh kosong' : ''}

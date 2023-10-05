@@ -146,7 +146,6 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
   return (
     <Dialog disableRestoreFocus open={props.visible} onClose={() => props.onDismiss(false)}>
       <DialogTitle>Tambahkan barang baru</DialogTitle>
-
       <DialogContent>
         <Autocomplete
           sx={{ my: '0.5rem' }}
@@ -164,10 +163,10 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
             }
           }}
           fullWidth
-          autoFocus
           renderInput={(params) => (
             <TextField
               {...params}
+              autoFocus
               label="Nama barang"
               error={requiredError && !name}
               helperText={requiredError && !name ? 'Nama barang tidak boleh kosong' : ''}
@@ -269,7 +268,6 @@ const ItemAddModal: React.FC<ItemAddModalProps> = (props) => {
           </IconButton>
         </Box>
       </DialogContent>
-
       <DialogActions>
         <Calendar date={date} setDate={setDate} />
         <Button disabled={preventDoubleSubmit} onClick={handleSubmit}>

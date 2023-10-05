@@ -30,7 +30,7 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
 
   const transactionPriceInputRef = React.useRef<HTMLDivElement | null>(null);
 
-  const handleTransactionInputSubmit = (debit: boolean) => {
+  const handleSubmit = (debit: boolean) => {
     try {
       // Prevent double submit
       if (preventDoubleSubmit) {
@@ -126,10 +126,10 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
       </DialogContent>
       <DialogActions>
         <Calendar date={date} setDate={setDate} />
-        <Button disabled={preventDoubleSubmit} onClick={() => handleTransactionInputSubmit(true)}>
+        <Button disabled={preventDoubleSubmit} onClick={() => handleSubmit(true)}>
           Pendapatan
         </Button>
-        <Button disabled={preventDoubleSubmit} onClick={() => handleTransactionInputSubmit(false)}>
+        <Button disabled={preventDoubleSubmit} onClick={() => handleSubmit(false)}>
           Pengeluaran
         </Button>
       </DialogActions>
