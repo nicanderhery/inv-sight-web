@@ -30,9 +30,9 @@ const TransactionsPage = () => {
   }, [transactions]);
 
   React.useEffect(() => {
+    const startDate = calendarRange.startDate?.toDate().getTime() ?? 0;
     // Fetch transactions from database
     const unsubscribe = onValue(DBRefTransactions(storeId), (snapshot) => {
-      const startDate = calendarRange.startDate?.toDate().getTime() ?? 0;
       const endDate =
         calendarRange.endDate
           ?.add(23, 'hour')
