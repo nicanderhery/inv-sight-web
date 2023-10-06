@@ -28,7 +28,7 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
   const [inputRequiredError, setInputRequiredError] = React.useState(false);
   const [date, setDate] = React.useState<dayjs.Dayjs | null>(null);
 
-  const transactionPriceInputRef = React.useRef<HTMLDivElement | null>(null);
+  const priceRef = React.useRef<HTMLDivElement | null>(null);
 
   const handleSubmit = (debit: boolean) => {
     try {
@@ -100,7 +100,7 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
           onChange={(event) => setDescription(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
-              transactionPriceInputRef.current?.focus();
+              priceRef.current?.focus();
             }
           }}
           fullWidth
@@ -124,8 +124,8 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
             }}
             fullWidth
             inputMode="numeric"
-            inputRef={transactionPriceInputRef}
-            error={inputRequiredError && !description}
+            inputRef={priceRef}
+            error={inputRequiredError && !price}
             helperText={inputRequiredError && !price ? 'Harga tidak boleh kosong' : ''}
           />
         </Box>
