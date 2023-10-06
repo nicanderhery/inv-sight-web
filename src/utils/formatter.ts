@@ -62,7 +62,7 @@ export const generateCsvTransactionReport = (
   const transactionHeaders =
     'TANGGAL,JENIS TRANSAKSI,DESKRIPSI,NAMA,BERAT,MODEL,STOK LAMA,STOK BARU,MUTASI STOK,DEBIT,KREDIT,TOTAL MUTASI\n';
   const summaryHeaders = 'DATA SALDO\nSALDO AWAL,SALDO AKHIR\n';
-  const itemHeaders = 'DATA BARANG\nNAMA,BERAT,MODEL,STOK LAMA,STOK BARU\n';
+  const itemHeaders = 'DATA BARANG\nNAMA,BERAT,MODEL,STOK LAMA,STOK BARU,TOTAL BERAT\n';
 
   let csvData = transactionHeaders;
   let totalPrice = 0;
@@ -100,6 +100,78 @@ export const generateCsvTransactionReport = (
     csvData += `${formatMoney(balance)},${formatMoney(balance + totalPrice)}\n`;
   }
 
+  const getTotalWeight = (weight: string, quantity: number) => {
+    const weightUnits = ['gram', 'gr', 'suku', 'sk'];
+    const fractionMap = new Map<string, number>([
+      ['½', 0.5],
+      ['⅓', 0.33],
+      ['⅔', 0.67],
+      ['¼', 0.25],
+      ['¾', 0.75],
+      ['⅕', 0.2],
+      ['⅖', 0.4],
+      ['⅗', 0.6],
+      ['⅘', 0.8],
+      ['⅙', 0.17],
+      ['⅚', 0.83],
+      ['⅐', 0.14],
+      ['⅛', 0.13],
+      ['⅜', 0.38],
+      ['⅝', 0.63],
+      ['⅞', 0.88],
+      ['⅑', 0.11],
+      ['⅒', 0.1],
+    ]);
+    const unit = weightUnits.find((unit) => weight.toLocaleLowerCase().endsWith(unit));
+    if (!unit) {
+      return undefined;
+    }
+
+    // Remove the weight unit
+    const cleanedWeight = weight.replaceAll(' ', '').toLocaleLowerCase().replace(unit, '');
+
+    let totalWeight = 0;
+    let prevWeight = 0;
+    let fractionExist = false;
+    Array.from(cleanedWeight).map((char) => {
+      // Check whether it is an unicode fraction
+      const unicodeFraction = fractionMap.get(char);
+      if (unicodeFraction) {
+        // If it is an unicode fraction, then add it to the total weight
+        totalWeight += unicodeFraction;
+        return;
+      }
+
+      // Check whether the char is a number
+      const number = parseInt(char);
+      if (isNaN(number)) {
+        // If not a number, then it must be a fraction
+        fractionExist = true;
+        return;
+      }
+
+      // If it is a number, then add it to the total weight
+      if (fractionExist) {
+        totalWeight += prevWeight / number;
+        fractionExist = false;
+        prevWeight = 0;
+        return;
+      }
+      prevWeight = number;
+    });
+    // Add the last weight
+    if (prevWeight) {
+      totalWeight += prevWeight;
+    }
+
+    return {
+      totalWeight: totalWeight * quantity,
+      unitWeight: unit,
+    };
+  };
+
+  const totalWeightOfAllUnits = new Map<string, number>();
+
   csvData += '\nHIRAUKAN JIKA TIDAK MEMILIH SEMUA';
   csvData += `\n${itemHeaders}`;
   Array.from(inventory.values())
@@ -115,8 +187,21 @@ export const generateCsvTransactionReport = (
     )
     .forEach((pair) => {
       const newQuantity = copyInventory.get(pair.first.id)!.second;
-      csvData += `${pair.first.name},${pair.first.weight},${pair.first.model},${pair.second},${newQuantity}\n`;
+      const totalWeight = getTotalWeight(pair.first.weight, newQuantity);
+      if (totalWeight) {
+        const prevWeight = totalWeightOfAllUnits.get(totalWeight.unitWeight) ?? 0;
+        totalWeightOfAllUnits.set(totalWeight.unitWeight, prevWeight + totalWeight.totalWeight);
+      }
+      csvData += `${pair.first.name},${pair.first.weight},${pair.first.model},${
+        pair.second
+      },${newQuantity},${
+        totalWeight ? `${totalWeight.totalWeight} ${totalWeight.unitWeight}` : ''
+      }\n`;
     });
+  csvData += '\nTOTAL BERAT SELURUH BARANG\n';
+  totalWeightOfAllUnits.forEach((weight, unit) => {
+    csvData += `${weight} ${unit}\n`;
+  });
 
   return csvData;
 };
