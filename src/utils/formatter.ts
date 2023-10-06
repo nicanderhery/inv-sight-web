@@ -102,10 +102,21 @@ export const generateCsvTransactionReport = (
 
   csvData += '\nHIRAUKAN JIKA TIDAK MEMILIH SEMUA';
   csvData += `\n${itemHeaders}`;
-  inventory.forEach((pair, id) => {
-    const newQuantity = copyInventory.get(id)!.second;
-    csvData += `${pair.first.name},${pair.first.weight},${pair.first.model},${pair.second},${newQuantity}\n`;
-  });
+  Array.from(inventory.values())
+    .sort((a, b) =>
+      `${a.first.name}${a.first.weight}${a.first.model}`
+        .replaceAll(' ', '')
+        .toLocaleLowerCase()
+        .localeCompare(
+          `${b.first.name}${b.first.weight}${b.first.model}`
+            .replaceAll(' ', '')
+            .toLocaleLowerCase(),
+        ),
+    )
+    .forEach((pair) => {
+      const newQuantity = copyInventory.get(pair.first.id)!.second;
+      csvData += `${pair.first.name},${pair.first.weight},${pair.first.model},${pair.second},${newQuantity}\n`;
+    });
 
   return csvData;
 };
