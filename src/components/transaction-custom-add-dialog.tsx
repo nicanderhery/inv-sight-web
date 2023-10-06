@@ -23,7 +23,7 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
   const user = auth.currentUser;
 
   const [preventDoubleSubmit, setPreventDoubleSubmit] = React.useState(false);
-  const [transactionNameInput, setTransactionNameInput] = React.useState('');
+  const [description, setDescription] = React.useState('');
   const [price, setPrice] = React.useState(0);
   const [inputRequiredError, setInputRequiredError] = React.useState(false);
   const [date, setDate] = React.useState<dayjs.Dayjs | null>(null);
@@ -38,8 +38,14 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
       }
       setPreventDoubleSubmit(true);
 
-      if (!transactionNameInput || !price) {
+      if (!description || !price) {
         setInputRequiredError(true);
+        return;
+      }
+
+      // Check whether description contains comma
+      if (description.includes(',')) {
+        updateGlobalSnackbar('error', 'Deskripsi tidak boleh mengandung koma');
         return;
       }
 
@@ -49,7 +55,7 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
         createdAt:
           date?.add(23, 'hour').add(59, 'minute').add(59, 'second').toDate().getTime() ??
           new Date().getTime(),
-        description: transactionNameInput,
+        description: description,
         price: price,
         debit: debit,
         doneBy: user?.displayName ?? 'Unknown',
@@ -76,7 +82,7 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
   React.useEffect(() => {
     // Clear all inputs when modal is closed
     setTimeout(() => {
-      setTransactionNameInput('');
+      setDescription('');
       setPrice(0);
       setInputRequiredError(false);
       setDate(null);
@@ -89,9 +95,9 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
       <DialogContent>
         <TextField
           sx={{ my: '0.5rem' }}
-          label="Nama transaksi"
-          value={transactionNameInput}
-          onChange={(event) => setTransactionNameInput(event.target.value)}
+          label="Deskripsi transaksi"
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               transactionPriceInputRef.current?.focus();
@@ -99,9 +105,9 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
           }}
           fullWidth
           autoFocus
-          error={inputRequiredError && !transactionNameInput}
+          error={inputRequiredError && !description}
           helperText={
-            inputRequiredError && !transactionNameInput ? 'Nama transaksi tidak boleh kosong' : ''
+            inputRequiredError && !description ? 'Deskripsi transaksi tidak boleh kosong' : ''
           }
         />
 
@@ -119,7 +125,7 @@ const TransactionCustomAddDialog: React.FC<TransactionCustomAddDialogProps> = (p
             fullWidth
             inputMode="numeric"
             inputRef={transactionPriceInputRef}
-            error={inputRequiredError && !transactionNameInput}
+            error={inputRequiredError && !description}
             helperText={inputRequiredError && !price ? 'Harga tidak boleh kosong' : ''}
           />
         </Box>

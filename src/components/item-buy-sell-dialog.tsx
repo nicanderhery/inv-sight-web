@@ -40,6 +40,12 @@ const ItemBuySellDialog: React.FC<ItemBuySellDialogProps> = (props) => {
       }
       setPreventDoubleSubmit(true);
 
+      // Check whether description contains comma
+      if (description.includes(',')) {
+        updateGlobalSnackbar('error', 'Deskripsi tidak boleh mengandung koma');
+        return;
+      }
+
       if (!props.stock) {
         return;
       }

@@ -47,6 +47,12 @@ const ItemRenameModal: React.FC<ItemRenameModalProps> = (props) => {
         return;
       }
 
+      // Check whether item contains comma
+      if (name.includes(',') || weight.includes(',') || model.includes(',')) {
+        updateGlobalSnackbar('error', 'Nama, berat, dan model tidak boleh mengandung koma');
+        return;
+      }
+
       if (!props.stock) {
         updateGlobalSnackbar('error', 'Barang tidak ditemukan');
         return;

@@ -35,6 +35,12 @@ const StoreAddModal: React.FC<StoreAddModalProps> = (props) => {
         return;
       }
 
+      // Check whether input contains comma
+      if (input.includes(',')) {
+        updateGlobalSnackbar('error', 'Teks tidak boleh mengandung koma');
+        return;
+      }
+
       // Check whether user is signed in
       if (!user) {
         throw 'User is not signed in';
