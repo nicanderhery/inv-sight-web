@@ -14,7 +14,7 @@ const AppLayout = ({ children }: LayoutProps) => {
     <Box>
       <Appbar />
       {children}
-      <Snackbar open={snackbar.open} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+      <Snackbar open={snackbar.open} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
       </Snackbar>
     </Box>
