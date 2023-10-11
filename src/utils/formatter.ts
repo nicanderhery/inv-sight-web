@@ -131,14 +131,20 @@ export const generateCsvTransactionReport = (
     const cleanedWeight = weight.replaceAll(' ', '').toLocaleLowerCase().replace(unit, '');
 
     let totalWeight = 0;
-    let prevWeight = 0;
     let fractionExist = false;
+    let end = false;
     Array.from(cleanedWeight).map((char) => {
+      if (end) {
+        // The counting should end when a fraction is found
+        return;
+      }
+
       // Check whether it is an unicode fraction
       const unicodeFraction = fractionMap.get(char);
       if (unicodeFraction) {
-        // If it is an unicode fraction, then add it to the total weight
+        // If it is an unicode fraction, then add it to the total weight and end the loop
         totalWeight += unicodeFraction;
+        end = true;
         return;
       }
 
@@ -150,20 +156,20 @@ export const generateCsvTransactionReport = (
         return;
       }
 
-      // If it is a number, then add it to the total weight
+      // If a fraction exist, then the number is the denominator, so divide the total weight by the number
+      // and end the loop
       if (fractionExist) {
-        totalWeight += prevWeight / number;
-        fractionExist = false;
-        prevWeight = 0;
+        totalWeight = totalWeight / number;
+        end = true;
         return;
       }
-      prevWeight = number;
-    });
-    // Add the last weight
-    if (prevWeight) {
-      totalWeight += prevWeight;
-    }
 
+      // If previous weight is not a fraction, then multiply it by 10 and add the number
+      if (totalWeight) {
+        totalWeight *= 10;
+      }
+      totalWeight += number;
+    });
     return {
       totalWeight: totalWeight * quantity,
       unitWeight: unit,
