@@ -73,7 +73,7 @@ const Appbar = () => {
   }, []);
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky">
       <Toolbar>
         <Typography variant="h6" sx={{ cursor: 'pointer' }} onClick={() => navigate('/')}>
           InvSight
